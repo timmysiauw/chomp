@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <meta name="author" content="Timmy Siauw"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.00" />
+
+    <title>Chomp</title>
+
+    <link rel="stylesheet" type="text/css" href="css/normalize.min.css" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    
+    <style>
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        #game {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0px;
+        }
+
+        .player-banner {
+            float: left;
+            width: 48%;
+            margin: 5% 1%;
+            padding: 20px 10px;
+            text-align: center;
+            font-size: 16px;
+            border-style: none;
+            border-radius: 3px;
+        }
+
+        .player-banner.active {
+
+        }
+
+        #player-1-banner {
+            background-color: #3ADAFF;
+        }
+
+        #player-2-banner {
+            background-color: #FF983C;
+        }
+
+        #board-container {
+            width: 100%;
+            border-style: solid;
+            border-color: #292929;
+            border-width: 1px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div id = "game">
+
+        <div id = "board-container">
+            <div id = "board">
+                <span>Board</span>
+            </div>
+        </div>
+
+        <div id = "players">
+            <span id = "player-1-banner" class = "player-banner">Player 1</span>
+            <span id = "player-2-banner" class = "player-banner">Player 2</span>
+        </div>
+
+    </div>
+
+    <script>
+        
+        function initialize(rows, cols) {
+
+        }
+        
+    </script>
+
+
+</body>
+</html>
