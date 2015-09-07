@@ -7,9 +7,12 @@
 
     <title>Chomp</title>
 
+    <link rel="shortcut icon" href="favicon.ico"/>
     <link rel="stylesheet" type="text/css" href="css/normalize.min.css" />
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
+
+    <script src = "javascripts/jquery/jquery-1.11.2.min.js"></script>
     
     <style>
 
@@ -49,10 +52,36 @@
 
         #board-container {
             width: 100%;
-            border-style: solid;
-            border-color: #292929;
-            border-width: 1px;
         }
+
+        #board {
+        }
+
+        .tile {
+            background-color: #8B4513;
+            float: left;
+            border-style: outset;
+            border-color: #CD661D;
+        }
+
+        .tile:hover {
+            cursor: pointer;
+        }
+
+        .tile.poisoned {
+            background-color: #548B54;
+            border-color: #7CCD7C;
+        }
+
+        .tile.poisoned img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .tile.pending {
+            opacity: .5;
+        }
+
 
     </style>
 
@@ -61,26 +90,110 @@
 <body>
 
     <div id = "game">
-
-        <div id = "board-container">
-            <div id = "board">
-                <span>Board</span>
-            </div>
-        </div>
-
         <div id = "players">
             <span id = "player-1-banner" class = "player-banner">Player 1</span>
             <span id = "player-2-banner" class = "player-banner">Player 2</span>
+            <br style="clear:both;">
         </div>
 
+        <div id = "board-container">
+            <div id = "board">
+            </div>
+            <br style="clear:both;">
+        </div>
+    </div>
+
+    <div id = "log">
+        <h3> Logs </h3>
+        <div id = "log-list">
+        </div>
     </div>
 
     <script>
         
+        var STATE = {
+            status: "waiting",
+            rows: null,
+            cols: null,
+            board: [],
+            player: 1,
+            me: null
+        };
+
+        function clear() {
+            
+            $("#board").empty();
+
+            STATE = {
+                rows: null,
+                cols: null,
+                board: [],
+                player: null,
+                me: null,
+            };
+        };
+
         function initialize(rows, cols) {
 
-        }
-        
+            clear();
+
+            STATE.rows = rows;
+            STATE.cols = cols;
+
+            for (var i=0; i<rows; i++) {
+                STATE.board.push([]);
+                for (var j=0; j<cols; j++) {
+                    STATE.board[i].push(true);
+                    $("#board").append("<div id = '" + i + "-" + j + "' class = 'tile'></div>")
+                };
+            }
+
+            $("#" + (STATE.rows-1) + "-" + 0).addClass("poisoned").append("<img src = 'poisoned.png'/>")
+
+            resize();
+        };
+
+        function resize() {
+            var width = $("#board").width();
+            var dim = width/STATE.cols;
+            $(".tile").css({height: dim, width: dim, "border-width":dim/8});
+        };
+
+        $("#board").on("click", ".tile", function (event) {
+            var pick = $(event.currentTarget).attr("id").split("-");
+
+            if ($("#" + pick[0] + "-" + pick[1]).hasClass("poisoned")) {
+                endGame();
+                return;
+            }
+
+            for (var i=0; i<=Number(pick[0]); i++) {
+                for (var j=Number(pick[1]); j<STATE.cols; j++) {
+                    $("#" + i + "-" + j).css("visibility", "hidden");
+                    STATE.board[i][j] = false;
+                }
+            }
+        });
+
+        $("#board").on("mouseenter", ".tile", function(event) {
+            var pick = $(event.currentTarget).attr("id").split("-");
+            for (var i=0; i<=Number(pick[0]); i++) {
+                for (var j=Number(pick[1]); j<STATE.cols; j++) {
+                    $("#" + i + "-" + j).addClass("pending");
+                }
+            }
+        });
+
+        $("#board").on("mouseleave", ".tile", function(event) {
+            $(".tile").removeClass("pending");
+        });
+
+        function endGame() {
+            initialize(5,12+Math.floor(5*Math.random()));
+        };
+
+        initialize(5,12+Math.floor(5*Math.random()))
+
     </script>
 
 
