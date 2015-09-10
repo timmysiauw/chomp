@@ -34,12 +34,14 @@
             padding: 20px 10px;
             text-align: center;
             font-size: 16px;
-            border-style: none;
+            border-style: solid;
+            border-width: 5px;
+            border-color: white;
             border-radius: 3px;
         }
 
-        .player-banner.active {
-
+        .player-banner.current-turn {
+            border-color: black;
         }
 
         #player-1-banner {
@@ -103,11 +105,11 @@
         </div>
     </div>
 
-    <div id = "log">
+    <!--<div id = "log">
         <h3> Logs </h3>
         <div id = "log-list">
         </div>
-    </div>
+    </div> -->
 
     <script>
         
@@ -116,24 +118,30 @@
             rows: null,
             cols: null,
             board: [],
-            player: 1,
+            turn: 1,
             me: null
         };
 
         function clear() {
             
             $("#board").empty();
+            $(".player-banner").removeClass("current-turn");
 
             STATE = {
                 rows: null,
                 cols: null,
                 board: [],
-                player: null,
+                turn: null,
                 me: null,
             };
         };
 
-        function initialize(rows, cols) {
+        function startGame() {
+            STATE.turn = 1;
+            $("#player-1-banner").addClass("current-turn");
+        };
+
+        function initializeBoard(rows, cols) {
 
             clear();
 
@@ -159,9 +167,7 @@
             $(".tile").css({height: dim, width: dim, "border-width":dim/8});
         };
 
-        $("#board").on("click", ".tile", function (event) {
-            var pick = $(event.currentTarget).attr("id").split("-");
-
+        function move(pick) {
             if ($("#" + pick[0] + "-" + pick[1]).hasClass("poisoned")) {
                 endGame();
                 return;
@@ -173,6 +179,14 @@
                     STATE.board[i][j] = false;
                 }
             }
+
+            STATE.turn = STATE.turn === 1 ? 2 : 1;
+            $(".player-banner").removeClass("current-turn");
+            $("#player-" + STATE.turn + "-banner").addClass("current-turn");
+        };
+
+        $("#board").on("click", ".tile", function (event) {
+            move($(event.currentTarget).attr("id").split("-"));
         });
 
         $("#board").on("mouseenter", ".tile", function(event) {
@@ -189,10 +203,13 @@
         });
 
         function endGame() {
-            initialize(5,12+Math.floor(5*Math.random()));
+            initializeBoard(5,12+Math.floor(5*Math.random()));
+            startGame();
         };
 
-        initialize(5,12+Math.floor(5*Math.random()))
+        initializeBoard(5,12+Math.floor(5*Math.random()));
+        startGame();
+
 
     </script>
 
